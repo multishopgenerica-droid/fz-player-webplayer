@@ -5,6 +5,11 @@ import {
 } from '@iptvnator/services';
 import { ElectronXtreamDataSource } from './electron-xtream-data-source';
 import { PwaXtreamDataSource } from './pwa-xtream-data-source';
+import { V1XtreamDataSource } from './v1-xtream-data-source';
+import { XtreamUrlService } from '../services/xtream-url.service';
+import { V1XtreamUrlService } from '../services/v1-xtream-url.service';
+import { XtreamApiService } from '../services/xtream-api.service';
+import { V1XtreamApiService } from '../services/v1-xtream-api.service';
 import {
     IXtreamDataSource,
     XTREAM_DATA_SOURCE,
@@ -14,6 +19,7 @@ import {
 export * from './xtream-data-source.interface';
 export { ElectronXtreamDataSource } from './electron-xtream-data-source';
 export { PwaXtreamDataSource } from './pwa-xtream-data-source';
+export { V1XtreamDataSource } from './v1-xtream-data-source';
 
 /**
  * Factory function that returns the appropriate data source based on environment.
@@ -27,7 +33,9 @@ export function xtreamDataSourceFactory(): IXtreamDataSource {
         return inject(ElectronXtreamDataSource);
     }
 
-    return inject(PwaXtreamDataSource);
+    // Web: V1XtreamDataSource (gateway /v1 quando a playlist é V2; senão delega
+    // ao PWA/Xtream normal, do qual herda).
+    return inject(V1XtreamDataSource);
 }
 
 /**
@@ -38,6 +46,11 @@ export function provideXtreamDataSource(): Provider[] {
     return [
         ElectronXtreamDataSource,
         PwaXtreamDataSource,
+        V1XtreamDataSource,
+        // Streams V2 → /v1/stream/{kind}/{id}?t=token (delega ao normal se não-V1).
+        { provide: XtreamUrlService, useClass: V1XtreamUrlService },
+        // Detalhe VOD/série + EPG V2 → /v1/item, /v1/epg (delega se não-V1).
+        { provide: XtreamApiService, useClass: V1XtreamApiService },
         {
             provide: XTREAM_DATA_SOURCE,
             useFactory: xtreamDataSourceFactory,

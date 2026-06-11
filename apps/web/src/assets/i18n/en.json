@@ -5,8 +5,16 @@
     "SHOW_MORE": "More",
     "SHOW_LESS": "Less",
     "PLAYLISTS": "Playlists",
+    "PARENTAL": {
+        "ENTER_TITLE": "Enter parental PIN",
+        "CREATE_TITLE": "Create a parental PIN",
+        "CONFIRM_TITLE": "Confirm the PIN",
+        "WRONG_PIN": "Wrong PIN",
+        "MISMATCH": "PINs do not match",
+        "CANCEL": "Cancel"
+    },
     "HOME": {
-        "TITLE": "IPTVnator",
+        "TITLE": "FZ Player",
         "SUBTITLE": "Please select a playlist from the list or add a new playlist",
         "TABS": {
             "RECENTLY_ADDED": "Recently added playlists",
@@ -19,7 +27,7 @@
         "PLAYLISTS": {
             "NO_PLAYLISTS": "No playlists were added",
             "ADD_FIRST": "Please add your first playlist",
-            "WELCOME_TITLE": "Welcome to IPTVnator",
+            "WELCOME_TITLE": "Bem-vindo ao FZ Player",
             "WELCOME_DESCRIPTION": "Start your streaming journey by adding your first playlist. Connect to your favorite IPTV service and enjoy live TV, movies, and series.",
             "ADD_YOUR_FIRST": "Add Your First Playlist",
             "FEATURE_M3U": "M3U/M3U8 Files",
@@ -162,11 +170,13 @@
             "BUTTON_LABEL": "Import"
         },
         "XTREAM_PLAYLIST": {
-            "TITLE": "Playlist title",
+            "TITLE": "List name (optional)",
             "SERVER_URL": "Server URL",
             "USERNAME": "Username",
             "PASSWORD": "Password",
-            "ADD": "Add",
+            "ACTIVATION_CODE": "Activation code",
+            "ACTIVATION_CODE_HINT": "5-digit code provided by your reseller",
+            "ADD": "Activate",
             "TEST_CREDENTIALS": "Test credentials",
             "URL_VALIDATION_ERROR": "Should be a valid url with protocol (e.g. http://example.com or https://example.com:4324)"
         },

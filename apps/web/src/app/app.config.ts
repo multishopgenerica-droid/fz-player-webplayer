@@ -88,7 +88,8 @@ export function getInitialLanguage(): string {
     } catch {
         // localStorage may throw in privacy modes; fall through to default.
     }
-    return 'en';
+    // FZ Player é um produto brasileiro — padrão pt-BR.
+    return 'pt';
 }
 
 /**

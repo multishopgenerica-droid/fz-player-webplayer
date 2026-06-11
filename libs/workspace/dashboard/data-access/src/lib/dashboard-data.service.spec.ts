@@ -730,6 +730,102 @@ describe('DashboardDataService', () => {
         ).toBe(service.globalRecentItems().length);
     });
 
+    it('hides adult recent items from the dashboard (parental control)', async () => {
+        // Regression: the parental PIN gated the catalog (All Items/search)
+        // but the dashboard hero + "Continue watching" rail leaked adult
+        // titles the user had watched. Adult must stay hidden here — the
+        // dashboard is never "inside" the PIN-unlocked adult category.
+        dbServiceMock.getGlobalRecentlyViewed.mockResolvedValue([
+            {
+                id: 801,
+                category_id: 90,
+                title: '[XXX] Yngr Venus Vixen Scene [Adulto]',
+                viewed_at: '2026-04-23T10:00:00.000Z',
+                poster_url: 'https://example.com/xxx.png',
+                xtream_id: 8001,
+                type: 'movie',
+                playlist_id: 'xtream-1',
+                playlist_name: 'Xtream Playlist',
+            },
+            {
+                id: 802,
+                category_id: 18,
+                title: 'Pennyworth [L]',
+                viewed_at: '2026-04-24T10:00:00.000Z',
+                poster_url: 'https://example.com/penny.png',
+                xtream_id: 8002,
+                type: 'series',
+                playlist_id: 'xtream-1',
+                playlist_name: 'Xtream Playlist',
+            },
+        ]);
+        playlistsSignal.set([
+            ...playlistsSignal(),
+            {
+                _id: 'xtream-1',
+                title: 'Xtream Playlist',
+                count: 1,
+                importDate: '2026-01-01T00:00:00.000Z',
+                autoRefresh: false,
+                serverUrl: 'https://example.com',
+            },
+        ]);
+
+        await service.reloadGlobalRecentItems();
+
+        const titles = service.globalRecentItems().map((item) => item.title);
+        expect(titles).toContain('Pennyworth [L]');
+        expect(titles).not.toContain('[XXX] Yngr Venus Vixen Scene [Adulto]');
+        // The VOD split (hero + "Continue watching" source) is also clean.
+        expect(
+            service.globalRecentVodItems().map((item) => item.title)
+        ).not.toContain('[XXX] Yngr Venus Vixen Scene [Adulto]');
+    });
+
+    it('hides adult favorites from the dashboard (parental control)', async () => {
+        dbServiceMock.getAllGlobalFavorites.mockResolvedValue([
+            {
+                id: 901,
+                category_id: 90,
+                title: 'Adult Channel XXX',
+                added_at: '2026-04-23T10:00:00.000Z',
+                poster_url: 'https://example.com/adult.png',
+                xtream_id: 9001,
+                type: 'live',
+                playlist_id: 'xtream-1',
+                playlist_name: 'Xtream Playlist',
+            },
+            {
+                id: 902,
+                category_id: 18,
+                title: 'Family Movie',
+                added_at: '2026-04-24T10:00:00.000Z',
+                poster_url: 'https://example.com/family.png',
+                xtream_id: 9002,
+                type: 'movie',
+                playlist_id: 'xtream-1',
+                playlist_name: 'Xtream Playlist',
+            },
+        ]);
+        playlistsSignal.set([
+            ...playlistsSignal(),
+            {
+                _id: 'xtream-1',
+                title: 'Xtream Playlist',
+                count: 1,
+                importDate: '2026-01-01T00:00:00.000Z',
+                autoRefresh: false,
+                serverUrl: 'https://example.com',
+            },
+        ]);
+
+        await service.reloadGlobalFavorites();
+
+        const titles = service.globalFavoriteItems().map((item) => item.title);
+        expect(titles).toContain('Family Movie');
+        expect(titles).not.toContain('Adult Channel XXX');
+    });
+
     it('loads playback positions for every playlist that owns VOD/series recent items and exposes them by content key', async () => {
         dbServiceMock.getGlobalRecentlyViewed.mockResolvedValue([
             {

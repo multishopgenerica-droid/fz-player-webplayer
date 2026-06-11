@@ -5,8 +5,16 @@
     "SHOW_MORE": "Mais",
     "SHOW_LESS": "Menos",
     "PLAYLISTS": "Playlists",
+    "PARENTAL": {
+        "ENTER_TITLE": "Digite o PIN parental",
+        "CREATE_TITLE": "Crie um PIN parental",
+        "CONFIRM_TITLE": "Confirme o PIN",
+        "WRONG_PIN": "PIN incorreto",
+        "MISMATCH": "Os PINs não conferem",
+        "CANCEL": "Cancelar"
+    },
     "HOME": {
-        "TITLE": "IPTVnator",
+        "TITLE": "FZ Player",
         "SUBTITLE": "Por favor, selecione uma playlist da lista ou adicione uma nova playlist",
         "TABS": {
             "RECENTLY_ADDED": "Playlists adicionadas recentemente",
@@ -19,7 +27,7 @@
         "PLAYLISTS": {
             "NO_PLAYLISTS": "Nenhuma playlist foi adicionada",
             "ADD_FIRST": "Por favor, adicione sua primeira playlist",
-            "WELCOME_TITLE": "Bem-vindo ao IPTVnator",
+            "WELCOME_TITLE": "Bem-vindo ao FZ Player",
             "WELCOME_DESCRIPTION": "Comece sua jornada de streaming adicionando sua primeira playlist. Conecte-se ao seu serviço de IPTV preferido e aproveite TV ao vivo, filmes e séries.",
             "ADD_YOUR_FIRST": "Adicionar sua primeira playlist",
             "FEATURE_M3U": "Arquivos M3U/M3U8",
@@ -162,11 +170,13 @@
             "BUTTON_LABEL": "Importar"
         },
         "XTREAM_PLAYLIST": {
-            "TITLE": "Título da playlist",
+            "TITLE": "Nome da lista (opcional)",
             "SERVER_URL": "URL do servidor",
             "USERNAME": "Nome de usuário",
             "PASSWORD": "Senha",
-            "ADD": "Adicionar",
+            "ACTIVATION_CODE": "Código de ativação",
+            "ACTIVATION_CODE_HINT": "Código de 5 dígitos fornecido pelo seu revendedor",
+            "ADD": "Ativar",
             "TEST_CREDENTIALS": "Testar credenciais",
             "URL_VALIDATION_ERROR": "Deve ser uma URL válida com protocolo (por exemplo, http://example.com ou https://example.com:4324)"
         },
@@ -892,9 +902,9 @@
             "RAIL_SETTINGS": "Configurações",
             "OPEN_SETTINGS": "Abrir configurações",
             "RAIL_LIBRARY": "Biblioteca",
-            "RAIL_MOVIES": "Filmes",
-            "RAIL_LIVE": "TV ao vivo",
-            "RAIL_SERIES": "Séries",
+            "RAIL_MOVIES": "Vídeo",
+            "RAIL_LIVE": "Transmissões",
+            "RAIL_SERIES": "Coletânea",
             "RAIL_RECENTLY_ADDED": "Adicionados recentemente",
             "RAIL_SEARCH": "Pesquisa avançada",
             "RAIL_RECENT": "Visualizados recentemente",

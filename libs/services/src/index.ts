@@ -8,6 +8,7 @@ export * from './lib/playlist-delete-action.service';
 export * from './lib/playlist-backup.service';
 export * from './lib/playlist-refresh.service';
 export * from './lib/playlists.service';
+export * from './lib/parental.service';
 export * from './lib/portal-status.service';
 export * from './lib/runtime-capabilities.service';
 export * from './lib/settings-store.service';

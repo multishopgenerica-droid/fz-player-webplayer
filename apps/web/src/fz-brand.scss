@@ -1,0 +1,82 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// FZ Player — camada de identidade visual.
+//
+// Sobrescreve os design tokens --app-* do tema base (m3-theme.scss) com a
+// paleta FZ (fundo #0E0E12, accent Azul Royal #1D4ED8). Importado por ÚLTIMO
+// em styles.scss, então vence por ordem de cascata tanto o bloco :root (light)
+// quanto o bloco .dark-theme do tema original — sem editar o tema upstream.
+//
+// Fonte da verdade: FZ-Player-Android/shared/src/styles/tokens.css
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Tokens FZ aplicados em :root E .dark-theme para garantir consistência
+// independente da classe de tema ativa no <body>.
+:root,
+.dark-theme,
+body.dark-theme {
+    // ── Tokens FZ core (espelho de FZ-Player-Android/shared/src/styles/tokens.css)
+    // Usados pelos componentes FZ-idênticos (ex.: card de ativação/login).
+    --fz-bg: #0e0e12;
+    --fz-bg-elevated: #14141b;
+    --fz-fg: #ffffff;
+    --fz-fg-dim: #a9a9b2;
+    --fz-fg-subtle: #6e6e78;
+    --fz-accent: #1d4ed8;
+    --fz-accent-soft: rgba(29, 78, 216, 0.24);
+    --fz-accent-contrast: #ffffff;
+    --fz-surface: #17171d;
+    --fz-surface-hi: #23232b;
+    --fz-danger: #ff5c5c;
+    --fz-border: rgba(255, 255, 255, 0.08);
+    --fz-radius-lg: 12px;
+    --fz-radius-xl: 20px;
+    --fz-shadow-focus: 0 0 0 4px var(--fz-accent);
+
+    // ── Superfícies / fundos ────────────────────────────────────────────────
+    --app-shell-bg: #0e0e12; // --fz-bg
+    --app-rail-bg: #14141b; // --fz-bg-elevated
+    --app-header-bg: #0e0e12;
+    --app-content-bg: #0e0e12;
+    --app-rail-border: rgba(255, 255, 255, 0.06);
+
+    --app-widget-bg: #17171d; // --fz-surface
+    --app-widget-header-bg: #14141b;
+    --app-widget-border: rgba(255, 255, 255, 0.06);
+    --app-card-hover-bg: #23232b; // --fz-surface-hi
+    --app-separator: rgba(255, 255, 255, 0.08); // --fz-border
+
+    --app-search-bg: rgba(255, 255, 255, 0.05);
+    --app-search-border: rgba(255, 255, 255, 0.09);
+    --app-hover-overlay: rgba(255, 255, 255, 0.06);
+
+    // ── Texto ───────────────────────────────────────────────────────────────
+    --app-on-surface: #ffffff; // --fz-fg
+    --app-heading-color: #ffffff;
+    --app-body-color: #a9a9b2; // --fz-fg-dim
+    --app-muted-color: #6e6e78; // --fz-fg-subtle
+    --app-eyebrow-color: #6e6e78;
+
+    // ── Accent / seleção (Azul Royal FZ) ───────────────────────────────────
+    --app-selection-color: #1d4ed8; // --fz-accent
+    --app-selection-on-color: #ffffff;
+    --app-provider-xtream: #1d4ed8;
+    --app-accent-gradient: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+    --app-hero-surface: rgba(29, 78, 216, 0.06);
+
+    // ── Status ──────────────────────────────────────────────────────────────
+    --app-live-color: #ff5c5c; // --fz-danger
+}
+
+// O logo FZ (632x516) não é quadrado como o ícone original — garante que ele
+// caiba bem nos contêineres de marca sem distorção.
+.app-rail .brand img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.welcome-dashboard__illustration {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+}

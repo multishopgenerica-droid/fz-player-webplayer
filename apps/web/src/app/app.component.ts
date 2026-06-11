@@ -49,8 +49,8 @@ export class AppComponent implements OnInit {
     private runtime = inject(RuntimeCapabilitiesService);
     private readonly workspaceShellActions = inject(WORKSPACE_SHELL_ACTIONS);
 
-    /** Default language as fallback */
-    private readonly DEFAULT_LANG = Language.ENGLISH;
+    /** Default language as fallback — FZ Player é brasileiro, padrão pt-BR. */
+    private readonly DEFAULT_LANG = Language.PORTUGUESE;
 
     constructor() {
         const electronProcess = this.dataService.remote?.process;
@@ -154,7 +154,8 @@ export class AppComponent implements OnInit {
      * Applies the operating system color scheme when no explicit theme is set
      */
     detectDarkMode(): void {
-        this.settingsService.changeTheme(Theme.SystemTheme);
+        // FZ Player default: dark identity out of the box.
+        this.settingsService.changeTheme(Theme.DarkTheme);
     }
 
     /**

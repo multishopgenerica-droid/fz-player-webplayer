@@ -52,6 +52,9 @@
             "@iptvnator/playlist/import/feature": [
                 "libs/playlist/import/feature/src/index.ts"
             ],
+            "@iptvnator/playlist/import/feature/fz-login-v2": [
+                "libs/playlist/import/feature/src/lib/fz-login-v2/fz-login-v2.component.ts"
+            ],
             "@iptvnator/playlist/m3u/feature-player": [
                 "libs/playlist/m3u/feature-player/src/index.ts"
             ],

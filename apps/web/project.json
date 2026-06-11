@@ -31,7 +31,8 @@
                 "styles": [
                     "apps/web/src/styles.scss",
                     "apps/web/src/m3-theme.scss",
-                    "./node_modules/video.js/dist/video-js.css"
+                    "./node_modules/video.js/dist/video-js.css",
+                    "apps/web/src/fz-brand.scss"
                 ],
                 "allowedCommonJsDependencies": [
                     "qrcode",

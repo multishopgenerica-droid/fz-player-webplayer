@@ -8,8 +8,15 @@ import {
     output,
 } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
+import { MatIcon } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ParentalService } from '@iptvnator/services';
 import { PlaylistErrorViewComponent } from '../playlist-error-view/playlist-error-view.component';
+import {
+    ParentalPinDialogComponent,
+    ParentalPinDialogData,
+} from '../parental-pin-dialog/parental-pin-dialog.component';
 
 interface CategoryViewItem {
     readonly category_id?: string | number;
@@ -21,7 +28,7 @@ interface CategoryViewItem {
 
 @Component({
     selector: 'app-category-view',
-    imports: [MatListModule, PlaylistErrorViewComponent, TranslatePipe],
+    imports: [MatListModule, MatIcon, PlaylistErrorViewComponent, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './category-view.component.html',
     styleUrls: ['./category-view.component.scss'],
@@ -32,8 +39,40 @@ export class CategoryViewComponent {
     readonly itemCounts = input<Map<number, number>>(new Map());
     readonly showCounts = input<boolean>(false);
     private readonly hostEl = inject(ElementRef<HTMLElement>);
+    private readonly parental = inject(ParentalService);
+    private readonly dialog = inject(MatDialog);
 
     readonly categoryClicked = output<CategoryViewItem>();
+
+    /** Categoria adulta ainda travada nesta sessão (mostra cadeado). */
+    isLocked(item: CategoryViewItem): boolean {
+        return this.parental.isCategoryLocked(
+            item.category_name ?? item.name
+        );
+    }
+
+    /** Clique na categoria: se travada (adulta), pede PIN antes de abrir. */
+    onCategoryClick(item: CategoryViewItem): void {
+        if (!this.isLocked(item)) {
+            this.categoryClicked.emit(item);
+            return;
+        }
+        const data: ParentalPinDialogData = {
+            mode: this.parental.isPinSet() ? 'enter' : 'create',
+        };
+        this.dialog
+            .open(ParentalPinDialogComponent, {
+                data,
+                autoFocus: false,
+                panelClass: 'parental-pin-panel',
+            })
+            .afterClosed()
+            .subscribe((unlocked) => {
+                if (unlocked) {
+                    this.categoryClicked.emit(item);
+                }
+            });
+    }
 
     constructor() {
         effect(() => {

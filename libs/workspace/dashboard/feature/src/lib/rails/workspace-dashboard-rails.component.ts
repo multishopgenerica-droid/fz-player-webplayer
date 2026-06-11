@@ -19,7 +19,6 @@ import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
-    EmptyStateComponent,
     PlaylistInfoComponent,
     PlaylistRefreshActionService,
 } from '@iptvnator/playlist/shared/ui';
@@ -28,6 +27,7 @@ import {
     WorkspacePlaylistType,
 } from '@iptvnator/workspace/shell/util';
 import { DialogService } from '@iptvnator/ui/components';
+import { FzLoginV2Component } from '@iptvnator/playlist/import/feature/fz-login-v2';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import {
     PlaylistDeleteActionService,
@@ -399,7 +399,7 @@ function isXtreamAccountPlaylist(
     selector: 'lib-workspace-dashboard-rails',
     imports: [
         DashboardRailComponent,
-        EmptyStateComponent,
+        FzLoginV2Component,
         MatButtonModule,
         MatIcon,
         RouterLink,

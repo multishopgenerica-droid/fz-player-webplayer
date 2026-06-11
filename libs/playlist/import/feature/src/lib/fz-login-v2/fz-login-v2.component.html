@@ -1,0 +1,133 @@
+<div class="fz-login">
+    <div class="fz-login__bg" aria-hidden="true"></div>
+
+    <main class="fz-login__modal">
+        <!-- ── Coluna esquerda: título + form ───────────────────────── -->
+        <section class="fz-login__col fz-login__col--left">
+            <header class="fz-login__title-block">
+                <h1 class="fz-login__title">Conectar conta</h1>
+                <p class="fz-login__subtitle">
+                    Digite o código + usuário + senha, ou escaneie o QR para
+                    conectar pelo celular.
+                </p>
+            </header>
+
+            <div class="fz-login__form">
+                <!-- CÓDIGO DA CONTA -->
+                <div class="fz-field">
+                    <label class="fz-field__label" for="fz-code"
+                        >Código da conta</label
+                    >
+                    <div
+                        class="fz-field__inner"
+                        [class.fz-field--focused]="codeFocused"
+                    >
+                        <input
+                            id="fz-code"
+                            class="fz-field__input"
+                            type="text"
+                            inputmode="numeric"
+                            maxlength="5"
+                            placeholder="5 dígitos da sua conta"
+                            [ngModel]="code()"
+                            (ngModelChange)="onCodeInput($event)"
+                            (focus)="codeFocused = true"
+                            (blur)="codeFocused = false"
+                        />
+                    </div>
+                </div>
+
+                <!-- USUÁRIO -->
+                <div class="fz-field">
+                    <label class="fz-field__label" for="fz-user">Usuário</label>
+                    <div
+                        class="fz-field__inner"
+                        [class.fz-field--focused]="userFocused"
+                    >
+                        <input
+                            id="fz-user"
+                            class="fz-field__input"
+                            type="text"
+                            autocomplete="username"
+                            placeholder="Digite seu usuário"
+                            [ngModel]="user()"
+                            (ngModelChange)="user.set($event)"
+                            (focus)="userFocused = true"
+                            (blur)="userFocused = false"
+                        />
+                    </div>
+                </div>
+
+                <!-- SENHA -->
+                <div class="fz-field">
+                    <label class="fz-field__label" for="fz-pass">Senha</label>
+                    <div
+                        class="fz-field__inner"
+                        [class.fz-field--focused]="passFocused"
+                    >
+                        <input
+                            id="fz-pass"
+                            class="fz-field__input"
+                            [type]="showPassword() ? 'text' : 'password'"
+                            autocomplete="current-password"
+                            placeholder="Digite sua senha"
+                            [ngModel]="pass()"
+                            (ngModelChange)="pass.set($event)"
+                            (focus)="passFocused = true"
+                            (blur)="passFocused = false"
+                            (keyup.enter)="handleSubmit()"
+                        />
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    class="fz-btn fz-btn--ghost fz-btn--sm fz-login__toggle-password"
+                    (click)="togglePassword()"
+                >
+                    {{ showPassword() ? 'Ocultar senha' : 'Mostrar senha' }}
+                </button>
+
+                @if (errorMsg()) {
+                    <div class="fz-login__error">{{ errorMsg() }}</div>
+                }
+
+                <div class="fz-login__actions">
+                    <button
+                        type="button"
+                        class="fz-btn fz-btn--secondary fz-login__btn-cancel"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="button"
+                        class="fz-btn fz-btn--primary fz-login__btn-submit"
+                        [disabled]="!canSubmit()"
+                        (click)="handleSubmit()"
+                    >
+                        {{ submitting() ? 'Entrando…' : 'Entrar' }}
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Coluna direita: QR grande + ATIVAR APP + ID ──────────── -->
+        <aside class="fz-login__col fz-login__col--right">
+            <div class="fz-login__qr-card">
+                <div class="fz-login__qr-img">
+                    <canvas #qrCanvas width="240" height="240"></canvas>
+                </div>
+                <div class="fz-login__qr-label">ATIVAR APP</div>
+                <div class="fz-login__qr-url">{{ activateHost }}/conectar</div>
+                <div class="fz-login__qr-mac">
+                    <span class="fz-login__qr-mac-label">ID:</span>
+                    <span class="fz-login__qr-mac-value">{{
+                        fingerprintDisplay
+                    }}</span>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="fz-login__footer">{{ activateHost }}</footer>
+</div>
