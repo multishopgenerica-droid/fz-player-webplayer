@@ -1,5 +1,6 @@
 <div
     class="workspace-shell"
+    [class.workspace-shell--gateway]="facade.hasNoPlaylists()"
     appPlaylistDropZone
     #dropZone="playlistDropZone"
 >
@@ -8,6 +9,7 @@
         <app-workspace-shell-import-overlay />
     }
 
+    @if (!facade.hasNoPlaylists()) {
     <app-workspace-shell-rail
         [isMacOS]="facade.isMacOS"
         [brandLink]="facade.brandLink()"
@@ -52,6 +54,7 @@
         (playlistInfoRequested)="facade.openPlaylistInfo()"
         (accountInfoRequested)="facade.openAccountInfo()"
     />
+    }
 
     <div class="workspace-body" [class.single-pane]="!facade.showContextPanel()">
         @if (facade.showContextPanel()) {

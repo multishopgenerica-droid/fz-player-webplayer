@@ -4,20 +4,22 @@
     min-height: 0;
 }
 
+// Topbar horizontal: barra de navegação no topo (não mais rail lateral).
 .app-rail {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 2px;
+    gap: 6px;
+    width: 100%;
     height: 100%;
     box-sizing: border-box;
-    padding: 10px 8px;
-    border-right: 1px solid
+    padding: 0 12px;
+    border-bottom: 1px solid
         var(--app-rail-border, var(--mat-sys-outline-variant));
     background: var(--app-rail-bg, var(--mat-sys-surface-container-low));
     app-region: drag;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     scrollbar-width: none;
     --rail-link-color: color-mix(in srgb, var(--app-on-surface) 65%, transparent);
     --rail-link-hover-color: var(--app-on-surface);
@@ -29,8 +31,9 @@
     --rail-link-active-border: var(--app-selection-border);
     --rail-link-active-glow: var(--app-selection-glow);
 
+    // macOS: abre espaço à esquerda pros controles de janela (topbar horizontal).
     &.is-macos {
-        padding-top: 36px;
+        padding-left: 80px;
     }
 
     &::-webkit-scrollbar {
@@ -87,11 +90,11 @@
     &::after {
         content: '';
         position: absolute;
-        right: -4px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 3px;
-        height: 18px;
+        left: 50%;
+        bottom: -2px;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 3px;
         border-radius: 999px;
         background: var(--rail-link-active-icon);
         box-shadow: 0 0 10px var(--rail-link-active-glow);
@@ -99,7 +102,7 @@
 }
 
 .brand {
-    margin-bottom: 10px;
+    margin: 0 6px 0 0;
     background: var(--mat-sys-primary-container);
     color: var(--mat-sys-on-primary-container);
     width: 40px;
@@ -119,14 +122,13 @@
 .rail-context-region {
     --region-accent: var(--mat-sys-outline-variant);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 2px;
-    width: 100%;
-    max-width: 48px;
-    padding: 5px 2px;
-    margin: 4px 0;
-    border-radius: 14px;
+    gap: 4px;
+    width: auto;
+    padding: 3px 6px;
+    margin: 0 4px;
+    border-radius: 12px;
     background: color-mix(in srgb, var(--app-on-surface) 3%, transparent);
     border: 1px solid color-mix(in srgb, var(--app-on-surface) 4%, transparent);
     position: relative;
@@ -145,8 +147,9 @@
     }
 
     .rail-divider {
-        width: 24px;
-        margin: 3px 0;
+        width: 1px;
+        height: 24px;
+        margin: 0 3px;
         opacity: 0.25;
     }
 }
@@ -175,15 +178,15 @@
 }
 
 .rail-divider {
-    width: 44px;
-    height: 1px;
+    width: 1px;
+    height: 24px;
     background: var(--mat-sys-outline-variant);
-    margin: 6px 0;
+    margin: 0 6px;
     opacity: 0.5;
 }
 
 .rail-footer {
-    margin-top: auto;
+    margin-left: auto;
 
     .rail-shortcut {
         width: 44px;
@@ -212,11 +215,11 @@
         &.is-active::after {
             content: '';
             position: absolute;
-            right: -4px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 20px;
+            left: 50%;
+            bottom: -2px;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
             border-radius: 999px;
             background: var(--app-selection-color);
             box-shadow: 0 0 10px var(--app-selection-glow);

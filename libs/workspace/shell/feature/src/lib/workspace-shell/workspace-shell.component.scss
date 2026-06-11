@@ -6,9 +6,11 @@
 }
 
 .workspace-shell {
+    // Layout topbar: navegação horizontal no topo (linha 1), header (linha 2),
+    // conteúdo (linha 3) e barra de reprodução (linha 4). Coluna única.
     display: grid;
-    grid-template-columns: 60px 1fr;
-    grid-template-rows: 56px minmax(0, 1fr) auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: 52px 56px minmax(0, 1fr) auto;
     width: 100%;
     height: 100%;
     min-height: 0;
@@ -17,21 +19,38 @@
     color: var(--mat-sys-on-surface);
 }
 
-app-workspace-shell-rail {
-    grid-column: 1;
-    grid-row: 1 / span 3;
-    min-height: 0;
+// Estado "gateway": sem playlists, o login/pareamento FZ ocupa a tela inteira
+// (sem rail nem header), igual ao FZ Player.
+.workspace-shell--gateway {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+
+    .workspace-body {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .workspace-content {
+        border-radius: 0;
+        box-shadow: none;
+    }
 }
 
-app-workspace-shell-header {
-    grid-column: 2;
+app-workspace-shell-rail {
+    grid-column: 1;
     grid-row: 1;
     min-width: 0;
 }
 
-.workspace-body {
-    grid-column: 2;
+app-workspace-shell-header {
+    grid-column: 1;
     grid-row: 2;
+    min-width: 0;
+}
+
+.workspace-body {
+    grid-column: 1;
+    grid-row: 3;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     min-height: 0;
@@ -50,8 +69,8 @@ app-workspace-shell-context-sidebar {
 }
 
 .workspace-now-playing {
-    grid-column: 2;
-    grid-row: 3;
+    grid-column: 1;
+    grid-row: 4;
     padding: 0;
     background: var(--app-content-bg, var(--mat-sys-surface));
 }
@@ -63,39 +82,4 @@ app-workspace-shell-context-sidebar {
     background: var(--app-content-bg, var(--mat-sys-surface));
     border-radius: 16px 0 0 0;
     box-shadow: -4px 8px 20px var(--app-content-shadow, rgba(0, 0, 0, 0.18));
-}
-
-
-@media (max-width: 780px) {
-    .workspace-shell {
-        grid-template-columns: 56px 1fr;
-        grid-template-rows: 56px 1fr auto;
-    }
-}
-
-@media (max-width: 640px) {
-    .workspace-shell {
-        grid-template-columns: 1fr;
-        grid-template-rows: 52px 56px minmax(0, 1fr) auto;
-    }
-
-    app-workspace-shell-rail {
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-    app-workspace-shell-header {
-        grid-column: 1;
-        grid-row: 2;
-    }
-
-    .workspace-body {
-        grid-column: 1;
-        grid-row: 3;
-    }
-
-    .workspace-now-playing {
-        grid-column: 1;
-        grid-row: 4;
-    }
 }
