@@ -1,4 +1,4 @@
-import { computed } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import {
     patchState,
     signalStoreFeature,
@@ -6,6 +6,7 @@ import {
     withMethods,
     withState,
 } from '@ngrx/signals';
+import { ParentalService } from '@iptvnator/services';
 import { ContentType, XtreamContentLoadState } from '../../xtream-state';
 
 /**
@@ -127,6 +128,23 @@ export function withSelection() {
         withState<SelectionState>(initialSelectionState),
 
         withComputed((store) => {
+            const parental = inject(ParentalService);
+
+            // IDs de categorias adultas do tipo atual (live/vod/series). Itens
+            // adultos só aparecem ao selecionar a categoria adulta específica
+            // (protegida por PIN); em "All Items"/busca ficam escondidos.
+            const adultCategoryIdsForType = computed<Set<number>>(() => {
+                const storeAny = store as ParentSelectionStoreLike;
+                const type = store.selectedContentType();
+                const cats =
+                    type === 'live'
+                        ? storeAny.liveCategories?.()
+                        : type === 'vod'
+                          ? storeAny.vodCategories?.()
+                          : storeAny.serialCategories?.();
+                return parental.adultCategoryIds(cats ?? []);
+            });
+
             const getItemDate = (
                 item: XtreamSelectionItem,
                 categoryType: ContentType
@@ -268,6 +286,22 @@ export function withSelection() {
                           ? storeAny.vodStreams?.() || []
                           : storeAny.serialStreams?.() || [];
 
+                // Esconde itens adultos a menos que a categoria adulta específica
+                // esteja selecionada (que já passou pelo PIN). Cobre "All Items"
+                // e a busca-na-seção; o card adulto só surge dentro da categoria.
+                const adultIds = adultCategoryIdsForType();
+                const isAdultCategorySelected =
+                    !!categoryId && adultIds.has(categoryId);
+                const stripAdult = (
+                    list: XtreamSelectionItem[]
+                ): XtreamSelectionItem[] =>
+                    adultIds.size === 0 || isAdultCategorySelected
+                        ? list
+                        : list.filter(
+                              (item) =>
+                                  !adultIds.has(Number(item.category_id))
+                          );
+
                 if (categoryType === 'vod' || categoryType === 'series') {
                     let filtered = categoryId
                         ? content.filter(
@@ -276,19 +310,23 @@ export function withSelection() {
                         : sortedContent();
 
                     filtered = filterBySearchTerm(filtered, searchTerm);
-                    return categoryId || searchTerm
-                        ? sortByMode(filtered, sortMode, categoryType)
-                        : filtered;
+                    filtered =
+                        categoryId || searchTerm
+                            ? sortByMode(filtered, sortMode, categoryType)
+                            : filtered;
+                    return stripAdult(filtered);
                 }
 
                 if (!categoryId) {
-                    return filterBySearchTerm(sortedContent(), searchTerm);
+                    return stripAdult(
+                        filterBySearchTerm(sortedContent(), searchTerm)
+                    );
                 }
 
                 const filtered = content.filter(
                     (item) => Number(item.category_id) === categoryId
                 );
-                return filterBySearchTerm(filtered, searchTerm);
+                return stripAdult(filterBySearchTerm(filtered, searchTerm));
             });
 
             return {

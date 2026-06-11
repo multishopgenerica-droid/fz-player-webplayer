@@ -8,7 +8,14 @@ import {
     output,
 } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
+import { MatIcon } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ParentalService } from '@iptvnator/services';
+import {
+    ParentalPinDialogComponent,
+    ParentalPinDialogData,
+} from '@iptvnator/portal/shared/ui';
 import { WorkspaceContextErrorViewComponent } from './workspace-context-error-view.component';
 
 interface WorkspaceCategoryViewItem {
@@ -21,7 +28,12 @@ interface WorkspaceCategoryViewItem {
 
 @Component({
     selector: 'app-workspace-context-category-view',
-    imports: [MatListModule, TranslatePipe, WorkspaceContextErrorViewComponent],
+    imports: [
+        MatListModule,
+        MatIcon,
+        TranslatePipe,
+        WorkspaceContextErrorViewComponent,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './workspace-context-category-view.component.html',
     styleUrl: './workspace-context-category-view.component.scss',
@@ -36,8 +48,15 @@ export class WorkspaceContextCategoryViewComponent {
     readonly statusText = input('');
 
     private readonly hostEl = inject(ElementRef<HTMLElement>);
+    private readonly parental = inject(ParentalService);
+    private readonly dialog = inject(MatDialog);
 
     readonly categoryClicked = output<WorkspaceCategoryViewItem>();
+
+    /** Categoria adulta ainda travada nesta sessão (mostra cadeado). */
+    isLocked(item: WorkspaceCategoryViewItem): boolean {
+        return this.parental.isCategoryLocked(item.category_name ?? item.name);
+    }
 
     constructor() {
         effect(() => {
@@ -98,6 +117,26 @@ export class WorkspaceContextCategoryViewComponent {
             return;
         }
 
-        this.categoryClicked.emit(item);
+        if (!this.isLocked(item)) {
+            this.categoryClicked.emit(item);
+            return;
+        }
+
+        // Categoria adulta travada: pede PIN (cria no 1º acesso, senão verifica).
+        const data: ParentalPinDialogData = {
+            mode: this.parental.isPinSet() ? 'enter' : 'create',
+        };
+        this.dialog
+            .open(ParentalPinDialogComponent, {
+                data,
+                autoFocus: false,
+                panelClass: 'parental-pin-panel',
+            })
+            .afterClosed()
+            .subscribe((unlocked) => {
+                if (unlocked) {
+                    this.categoryClicked.emit(item);
+                }
+            });
     }
 }

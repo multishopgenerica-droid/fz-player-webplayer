@@ -1,0 +1,88 @@
+.pin-dialog {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 28px 28px;
+    min-width: 280px;
+}
+
+.pin-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+
+    .pin-lock {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        color: var(--mat-sys-primary);
+    }
+
+    h2 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+}
+
+.pin-dots {
+    display: flex;
+    gap: 14px;
+
+    &--error .pin-dot {
+        border-color: var(--mat-sys-error);
+    }
+}
+
+.pin-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--mat-sys-outline);
+    transition: background-color 0.15s ease;
+
+    &--filled {
+        background: var(--mat-sys-primary);
+        border-color: var(--mat-sys-primary);
+    }
+}
+
+.pin-error {
+    margin: 0;
+    color: var(--mat-sys-error);
+    font-size: 0.85rem;
+}
+
+.pin-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 64px);
+    gap: 10px;
+}
+
+.pin-key {
+    height: 56px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--mat-sys-on-surface);
+    background: var(--mat-sys-surface-container-high);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background: var(--mat-sys-surface-container-highest);
+    }
+
+    &--ghost {
+        background: transparent;
+        font-size: 0.85rem;
+        color: var(--mat-sys-on-surface-variant);
+    }
+}

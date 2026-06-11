@@ -7,7 +7,8 @@
                 [class.selected]="isSelected(item)"
                 [class.category-item--selected]="isSelected(item)"
                 [attr.aria-current]="isSelected(item) ? 'true' : null"
-                (click)="categoryClicked.emit(item)"
+                [class.category-item--locked]="isLocked(item)"
+                (click)="onCategoryClick(item)"
             >
                 <span class="nav-item-label">
                     {{
@@ -16,6 +17,9 @@
                             'No category name'
                     }}
                 </span>
+                @if (isLocked(item)) {
+                    <mat-icon class="category-lock">lock</mat-icon>
+                }
                 @if (showCounts()) {
                     <div class="item-count app-count-badge">
                         {{ getItemCount(item) }}

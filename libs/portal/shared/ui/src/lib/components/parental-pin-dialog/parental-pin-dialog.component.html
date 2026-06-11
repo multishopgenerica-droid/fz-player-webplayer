@@ -1,0 +1,46 @@
+<div class="pin-dialog">
+    <div class="pin-head">
+        <mat-icon class="pin-lock">lock</mat-icon>
+        <h2>{{ titleKey() | translate }}</h2>
+    </div>
+
+    <div class="pin-dots" [class.pin-dots--error]="error()">
+        @for (d of digits(); track $index) {
+            <span class="pin-dot" [class.pin-dot--filled]="d !== '·'"></span>
+        }
+    </div>
+
+    @if (error()) {
+        <p class="pin-error">
+            {{
+                (error() === 'wrong'
+                    ? 'PARENTAL.WRONG_PIN'
+                    : 'PARENTAL.MISMATCH'
+                ) | translate
+            }}
+        </p>
+    }
+
+    <div class="pin-pad">
+        @for (n of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track n) {
+            <button type="button" class="pin-key" (click)="press(n)">
+                {{ n }}
+            </button>
+        }
+        <button
+            type="button"
+            class="pin-key pin-key--ghost"
+            (click)="cancel()"
+        >
+            {{ 'PARENTAL.CANCEL' | translate }}
+        </button>
+        <button type="button" class="pin-key" (click)="press(0)">0</button>
+        <button
+            type="button"
+            class="pin-key pin-key--ghost"
+            (click)="backspace()"
+        >
+            <mat-icon>backspace</mat-icon>
+        </button>
+    </div>
+</div>

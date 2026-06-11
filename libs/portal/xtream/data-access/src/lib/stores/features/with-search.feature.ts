@@ -5,7 +5,7 @@ import {
     withMethods,
     withState,
 } from '@ngrx/signals';
-import { GlobalSearchResult } from '@iptvnator/services';
+import { GlobalSearchResult, ParentalService } from '@iptvnator/services';
 import {
     XTREAM_DATA_SOURCE,
     XtreamContentItem,
@@ -66,8 +66,12 @@ const initialSearchState: SearchState = {
  */
 export function withSearch() {
     const logger = createLogger('withSearch');
+    type CategoryLike = { category_id?: string | number; category_name?: string };
     type ParentSearchStoreLike = {
         playlistId?: () => string | null;
+        liveCategories?: () => CategoryLike[];
+        vodCategories?: () => CategoryLike[];
+        serialCategories?: () => CategoryLike[];
     };
 
     return signalStoreFeature(
@@ -75,7 +79,25 @@ export function withSearch() {
 
         withMethods((store) => {
             const dataSource = inject(XTREAM_DATA_SOURCE);
+            const parental = inject(ParentalService);
             let searchRequestVersion = 0;
+
+            // Remove resultados de busca em categorias adultas (igual ao FZ:
+            // conteúdo adulto não aparece na busca; só dentro da categoria).
+            const stripAdultResults = (
+                results: XtreamContentItem[]
+            ): XtreamContentItem[] => {
+                const s = store as ParentSearchStoreLike;
+                const adultIds = parental.adultCategoryIds([
+                    ...(s.liveCategories?.() ?? []),
+                    ...(s.vodCategories?.() ?? []),
+                    ...(s.serialCategories?.() ?? []),
+                ]);
+                if (adultIds.size === 0) return results;
+                return results.filter(
+                    (r) => !adultIds.has(Number(r.category_id))
+                );
+            };
 
             return {
                 /**
@@ -115,11 +137,13 @@ export function withSearch() {
                     patchState(store, { isSearching: true });
 
                     try {
-                        const results = await dataSource.searchContent(
-                            playlistId,
-                            searchTerm,
-                            types,
-                            excludeHidden
+                        const results = stripAdultResults(
+                            await dataSource.searchContent(
+                                playlistId,
+                                searchTerm,
+                                types,
+                                excludeHidden
+                            )
                         );
 
                         if (requestVersion !== searchRequestVersion) {

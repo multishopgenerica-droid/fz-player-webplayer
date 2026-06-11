@@ -15,6 +15,7 @@
                 [class.selected]="isSelected(item)"
                 [class.category-item--selected]="isSelected(item)"
                 [class.category-item--disabled]="!interactionEnabled()"
+                [class.category-item--locked]="isLocked(item)"
                 [attr.aria-current]="isSelected(item) ? 'true' : null"
                 [attr.aria-disabled]="!interactionEnabled()"
                 [disabled]="!interactionEnabled()"
@@ -27,6 +28,9 @@
                             'No category name'
                     }}
                 </span>
+                @if (isLocked(item)) {
+                    <mat-icon class="category-lock">lock</mat-icon>
+                }
                 @if (showCounts()) {
                     @if (countDisplayMode() === 'loading') {
                         <div
