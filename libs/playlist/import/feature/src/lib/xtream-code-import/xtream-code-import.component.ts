@@ -97,9 +97,6 @@ export class XtreamCodeImportComponent {
         }`;
 
         try {
-            // User-initiated connection test — bypass the shared cache so the
-            // result reflects the portal's current state, not whatever was
-            // cached up to 30 s ago by another component.
             this.connectionStatus =
                 await this.portalStatusService.checkPortalStatus(
                     serverUrl,
@@ -160,13 +157,9 @@ export class XtreamCodeImportComponent {
         )
             return;
         try {
-            // Create a new URL object from the complete link
             const url = new URL(urlAsString);
-
-            // Extract username and password from query parameters
             const username = url.searchParams.get('username') || '';
             const password = url.searchParams.get('password') || '';
-
             this.form.get('username')?.setValue(username);
             this.form.get('password')?.setValue(password);
         } catch (error) {

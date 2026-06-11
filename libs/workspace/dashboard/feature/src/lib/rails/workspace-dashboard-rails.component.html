@@ -4,11 +4,8 @@
     data-test-id="dashboard-page"
 >
     @if (data.playlistsLoaded() && !hasPlaylists()) {
-        <app-empty-state
-            [type]="'welcome-dashboard'"
-            [showElectronOnlyValueProps]="isElectron"
-            (addPlaylistClicked)="onAddPlaylist($event)"
-        />
+        <!-- Tela de login V2 (Conectar conta) idêntica ao FZ Player LG -->
+        <app-fz-login-v2 />
     } @else {
         <!-- Hero: real card if a recent item resolved, skeleton while still
              loading the first global recent item, nothing if no recent items

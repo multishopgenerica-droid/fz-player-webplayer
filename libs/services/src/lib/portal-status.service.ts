@@ -8,6 +8,29 @@ export type PortalStatus =
     | 'unavailable'
     | 'checking';
 
+/**
+ * True se a serverUrl é o gateway neutro V2 (/v1). Lê o host do appConfig em
+ * cache (gravado pelo login V2); fallback no default. Self-contained pra não
+ * importar a lib de data-access (evita ciclo nx).
+ */
+function isV1Gateway(serverUrl: string | undefined | null): boolean {
+    if (!serverUrl) return false;
+    const norm = serverUrl.replace(/\/+$/, '');
+    try {
+        const raw = localStorage.getItem('fz:appConfig');
+        if (raw) {
+            const c = JSON.parse(raw) as Record<string, unknown>;
+            const gw = String(c['gatewayOrigin'] || c['connectOrigin'] || '')
+                .trim()
+                .replace(/\/+$/, '');
+            if (gw && norm === gw) return true;
+        }
+    } catch {
+        /* ignore */
+    }
+    return norm === 'https://ativar.fzplayer.com';
+}
+
 interface XtreamPortalStatusResponse {
     payload?: {
         user_info?: {
@@ -70,6 +93,13 @@ export class PortalStatusService {
         password: string,
         options?: CheckPortalStatusOptions
     ): Promise<PortalStatus> {
+        // Gateway neutro V2 (/v1): não fala player_api.php — a sessão já foi
+        // validada no /v1/activate. Reporta 'active' direto pra não bloquear o
+        // load de catálogo. Detecção self-contained (sem import cross-lib).
+        if (isV1Gateway(serverUrl)) {
+            return 'active';
+        }
+
         const cacheKey = this.buildCacheKey(serverUrl, username, password);
 
         if (!options?.skipCache) {

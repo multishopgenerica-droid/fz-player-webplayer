@@ -81,7 +81,9 @@ export class PwaXtreamDataSource implements IXtreamDataSource {
 
     // In-memory cache for the current session
     private categoryCache = new Map<string, XtreamCategory[]>();
-    private contentCache = new Map<string, XtreamCachedContentItem[]>();
+    // protected: subclasses (V1) populam o mesmo cache pra que favoritos/recentes
+    // (que resolvem o item por `findCachedContentItemById`) encontrem o snapshot.
+    protected contentCache = new Map<string, XtreamCachedContentItem[]>();
     private playlistPasswords = new Map<string, string>();
 
     // =========================================================================
@@ -374,7 +376,7 @@ export class PwaXtreamDataSource implements IXtreamDataSource {
         return normalizedStreams.length;
     }
 
-    private normalizeContentItems(
+    protected normalizeContentItems(
         streams:
             | XtreamLiveStream[]
             | XtreamVodStream[]
