@@ -172,7 +172,7 @@ function mapSeriesDetail(d: V1SeriesDetail): XtreamSerieDetails {
 function mapEpisode(e: V1Episode, season: number): XtreamSerieEpisode {
     return {
         id: String(e.id),
-        episode_num: e.number,
+        episode_num: Number(e.number),
         title: e.title,
         container_extension: 'mp4',
         season,
