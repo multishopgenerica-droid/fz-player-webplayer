@@ -18,6 +18,7 @@ import { firstValueFrom, startWith } from 'rxjs';
 import {
     DatabaseService,
     GlobalRecentlyAddedKind,
+    ParentalService,
     PlaylistsService,
     RuntimeCapabilitiesService,
 } from '@iptvnator/services';
@@ -106,6 +107,7 @@ export class DashboardDataService {
     private readonly dbService = inject(DatabaseService);
     private readonly xtreamDataSource = inject(XTREAM_DATA_SOURCE);
     private readonly playlistsService = inject(PlaylistsService);
+    private readonly parental = inject(ParentalService);
     private readonly runtime = inject(RuntimeCapabilitiesService);
     private readonly ngZone = inject(NgZone);
     private readonly translate = inject(TranslateService);
@@ -239,6 +241,11 @@ export class DashboardDataService {
             ...this.xtreamGlobalRecentItems(),
             ...this.playlistBackedGlobalRecentItems(),
         ]
+            // Controle parental: o histórico no dashboard nunca está "dentro"
+            // da categoria adulta que passou pelo PIN, então adulto fica sempre
+            // escondido aqui (hero + "Continuar assistindo"), igual a All
+            // Items/busca.
+            .filter((item) => !this.parental.isAdultTitle(item.title))
             .sort(
                 (a, b) =>
                     toDateTimestamp(b.viewed_at) - toDateTimestamp(a.viewed_at)
@@ -401,6 +408,10 @@ export class DashboardDataService {
             ...this.m3uGlobalFavorites(),
             ...this.stalkerGlobalFavorites(),
         ]
+            // Controle parental: favoritos adultos também ficam escondidos no
+            // dashboard (rail de favoritos + "Live now"); só aparecem dentro da
+            // categoria adulta destravada por PIN.
+            .filter((item) => !this.parental.isAdultTitle(item.title))
             .sort((a, b) => toTimestamp(b.added_at) - toTimestamp(a.added_at))
             .slice(0, 200)
     );
@@ -539,6 +550,7 @@ export class DashboardDataService {
         const items = await this.dbService.getGlobalRecentlyAdded(kind, limit);
         return items
             .map((item) => mapDbRecentlyAddedToItem(item))
+            .filter((item) => !this.parental.isAdultTitle(item.title))
             .sort((a, b) => toTimestamp(b.added_at) - toTimestamp(a.added_at));
     }
 
@@ -556,6 +568,7 @@ export class DashboardDataService {
         );
         return items
             .map((item) => mapDbRecentlyAddedToItem(item))
+            .filter((item) => !this.parental.isAdultTitle(item.title))
             .sort((a, b) => toTimestamp(b.added_at) - toTimestamp(a.added_at));
     }
 

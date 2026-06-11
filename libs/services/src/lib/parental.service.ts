@@ -25,6 +25,16 @@ export class ParentalService {
     }
 
     /**
+     * O título do item é adulto? (mesma regex da categoria.) Usado em
+     * superfícies que carregam itens soltos — histórico/favoritos no
+     * dashboard — onde não há lista de categorias pra resolver por ID. O
+     * catálogo FZ marca adulto no título ("[XXX] ... [Adulto]").
+     */
+    isAdultTitle(title: string | null | undefined): boolean {
+        return this.isAdultCategory(title);
+    }
+
+    /**
      * IDs das categorias adultas de uma lista (XtreamCategory ou similar).
      * Usado pra esconder itens adultos de "All Items"/busca/dashboard — eles só
      * aparecem ao entrar na categoria adulta específica (que passa pelo PIN).
